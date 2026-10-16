@@ -1,5 +1,4 @@
 #pragma region VEXcode Generated Robot Configuration
-// Make sure all required headers are included.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -11,11 +10,9 @@
 
 using namespace vex;
 
-// Brain should be defined by default
 brain Brain;
 
 
-// START IQ MACROS
 #define waitUntil(condition)                                                   \
   do {                                                                         \
     wait(5, msec);                                                             \
@@ -23,10 +20,8 @@ brain Brain;
 
 #define repeat(iterations)                                                     \
   for (int iterator = 0; iterator < iterations; iterator++)
-// END IQ MACROS
 
 
-// Robot configuration code.
 inertial BrainInertial = inertial();
 motor LeftDriveSmart = motor(PORT9, 1, true);
 motor RightDriveSmart = motor(PORT10, 1, false);
@@ -35,23 +30,21 @@ controller Controller = controller();
 motor RatchetMotorA = motor(PORT12, true);
 motor RatchetMotorB = motor(PORT7, false);
 motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
+
 motor Lift = motor(PORT1, false);
 motor Intake = motor(PORT6, true);
 sonar Distance_Sensor = sonar(PORT2);
-touchled TouchLED = touchled(PORT8); // Automatically configured on Port 8
+touchled TouchLED = touchled(PORT8);
 
 
-// generating and setting random seed
 void initializeRandomSeed(){
   wait(100,msec);
   double xAxis = BrainInertial.acceleration(xaxis) * 1000;
   double yAxis = BrainInertial.acceleration(yaxis) * 1000;
   double zAxis = BrainInertial.acceleration(zaxis) * 1000;
-  // Combine these values into a single integer
   int seed = int(
     xAxis + yAxis + zAxis
   );
-  // Set the seed
   srand(seed); 
 }
 
@@ -59,69 +52,47 @@ void initializeRandomSeed(){
 
 void vexcodeInit() {
 
-  // Initializing random seed.
   initializeRandomSeed(); 
 }
 
 
-// define variable for remote controller enable/disable
 bool RemoteControlCodeEnabled = true;
-// define variables used for controlling motors based on controller inputs
 bool DrivetrainLNeedsToBeStopped_Controller = true;
 bool DrivetrainRNeedsToBeStopped_Controller = true;
 
-// define a task that will handle monitoring inputs from Controller
 int rc_auto_loop_function_Controller() {
-  // process the controller input every 20 milliseconds
-  // update the motors based on the input values
   while(true) {
     if(RemoteControlCodeEnabled) {
       
-      // calculate the drivetrain motor velocities from the controller joystick axies
-      // left = AxisA + AxisC
-      // right = AxisA - AxisC
       int drivetrainLeftSideSpeed = Controller.AxisA.position() + Controller.AxisC.position();
       int drivetrainRightSideSpeed = Controller.AxisA.position() - Controller.AxisC.position();
       
-      // check if the value is inside of the deadband range
       if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
-        // check if the left motor has already been stopped
         if (DrivetrainLNeedsToBeStopped_Controller) {
-          // stop the left drive motor
-          LeftDriveSmart.stop(coast);
-          // tell the code that the left motor has been stopped
+          LeftDriveSmart.stop();
           DrivetrainLNeedsToBeStopped_Controller = false;
         }
       } else {
-        // reset the toggle so that the deadband code knows to stop the left motor nexttime the input is in the deadband range
         DrivetrainLNeedsToBeStopped_Controller = true;
       }
-      // check if the value is inside of the deadband range
       if (drivetrainRightSideSpeed < 5 && drivetrainRightSideSpeed > -5) {
-        // check if the right motor has already been stopped
         if (DrivetrainRNeedsToBeStopped_Controller) {
-          // stop the right drive motor
-          RightDriveSmart.stop(coast);
-          // tell the code that the right motor has been stopped
+          RightDriveSmart.stop();
           DrivetrainRNeedsToBeStopped_Controller = false;
         }
       } else {
-        // reset the toggle so that the deadband code knows to stop the right motor next time the input is in the deadband range
         DrivetrainRNeedsToBeStopped_Controller = true;
       }
       
-      // only tell the left drive motor to spin if the values are not in the deadband range
       if (DrivetrainLNeedsToBeStopped_Controller) {
         LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
         LeftDriveSmart.spin(forward);
       }
-      // only tell the right drive motor to spin if the values are not in the deadband range
       if (DrivetrainRNeedsToBeStopped_Controller) {
         RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
         RightDriveSmart.spin(forward);
       }
     }
-    // wait before repeating the process
     wait(20, msec);
   }
   return 0;
@@ -131,24 +102,18 @@ task rc_auto_loop_task_Controller(rc_auto_loop_function_Controller);
 
 #pragma endregion VEXcode Generated Robot Configuration
 
-// Include the IQ Library
 #include "vex.h"
   
-// Allows for easier use of the VEX Library
 using namespace vex;
 
 float myVariable;
-
-// Tracks if the robot is active
 bool isRobotActive = true;
 
-// Emergency stop code
 void activateEmergencyStop() {
   isRobotActive = false;
-  RemoteControlCodeEnabled = false; 
+  RemoteControlCodeEnabled = false;
   TouchLED.on(color::red);
 
-  // Sets everything to coast instantly
   LeftDriveSmart.stop(brakeType::coast);
   RightDriveSmart.stop(brakeType::coast);
   Ratchet.stop(brakeType::coast);
@@ -156,13 +121,11 @@ void activateEmergencyStop() {
   Intake.stop(brakeType::coast);
 }
 
-// Undoing Emergency Stop
 void resumeRobotState() {
   isRobotActive = true;
-  RemoteControlCodeEnabled = true; 
+  RemoteControlCodeEnabled = true;
   TouchLED.on(color::green);
 
-  // Restores base configurations
   Drivetrain.setDriveVelocity(100.0, percent);
   Drivetrain.setTurnVelocity(100.0, percent);
   Ratchet.setVelocity(100.0, percent);
@@ -170,7 +133,6 @@ void resumeRobotState() {
   Intake.setVelocity(100.0, percent);
 }
 
-// "when started" hat block
 int whenStarted1() {
   Drivetrain.setDriveVelocity(100.0, percent);
   Drivetrain.setTurnVelocity(100.0, percent);
@@ -180,49 +142,50 @@ int whenStarted1() {
   Lift.setMaxTorque(100.0, percent);
   Intake.setVelocity(100.0, percent);
   Intake.setMaxTorque(100.0, percent);
+  Ratchet.spinToPosition(0.0, degrees, true);
 
-  // Starts as Green because the robot is active
   TouchLED.on(color::green);
   return 0;
 }
 
-// "when Controller ButtonRUp pressed" hat block
 void onevent_ControllerButtonRUp_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
-  Ratchet.spinFor(forward, 990.0, degrees, true);
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 0.2, turns, true);
+  wait(0.2, seconds);
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 3.14, turns, true);
 }
 
-// "when Controller ButtonRDown pressed" hat block
-void onevent_ControllerButtonRDown_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
-  Ratchet.spinFor(forward, 90.0, degrees, true);
-}
-
-// "when Controller ButtonLUp pressed" hat block
 void onevent_ControllerButtonLUp_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
-  Lift.spinFor(forward, 1440.0, degrees, true);
+  if (!isRobotActive) return;
+  Lift.spinToPosition(710.0, degrees, true);
 }
 
-// "when Controller ButtonLDown pressed" hat block
 void onevent_ControllerButtonLDown_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
-  Lift.spinFor(reverse, 1440.0, degrees, true);
+  if (!isRobotActive) return;
+  Lift.spinToPosition(0.0, degrees, true);
 }
 
-// "when Controller ButtonEUp pressed" hat block
 void onevent_ControllerButtonEUp_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
+  if (!isRobotActive) return;
   Intake.spin(forward);
 }
 
-// "when Controller ButtonEDown pressed" hat block
-void onevent_ControllerButtonEDown_pressed_0() {
-  if (!isRobotActive) return; // Block action if emergency stopped
+void onevent_ControllerButtonL3_pressed_0() {
+  if (!isRobotActive) return;
+  Intake.stop();
+}
+
+void onevent_ControllerButtonFDown_pressed_0() {
+  if (!isRobotActive) return;
   Intake.spin(reverse);
 }
 
-// "when TouchLED pressed" toggle logic
+void onevent_ControllerButtonR3_pressed_0() {
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 0.2, turns, true);
+}
+
 void onevent_TouchLED_pressed_0() {
   if (isRobotActive) {
     activateEmergencyStop();
@@ -233,18 +196,17 @@ void onevent_TouchLED_pressed_0() {
 
 
 int main() {
-  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  // register event handlers
   Controller.ButtonRUp.pressed(onevent_ControllerButtonRUp_pressed_0);
-  Controller.ButtonRDown.pressed(onevent_ControllerButtonRDown_pressed_0);
   Controller.ButtonLUp.pressed(onevent_ControllerButtonLUp_pressed_0);
   Controller.ButtonLDown.pressed(onevent_ControllerButtonLDown_pressed_0);
   Controller.ButtonEUp.pressed(onevent_ControllerButtonEUp_pressed_0);
-  Controller.ButtonEDown.pressed(onevent_ControllerButtonEDown_pressed_0);
+  Controller.ButtonL3.pressed(onevent_ControllerButtonL3_pressed_0);
+  Controller.ButtonFDown.pressed(onevent_ControllerButtonFDown_pressed_0);
+  Controller.ButtonR3.pressed(onevent_ControllerButtonR3_pressed_0);
   TouchLED.pressed(onevent_TouchLED_pressed_0);
-  
+
   wait(15, msec);
   whenStarted1();
 }
