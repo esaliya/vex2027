@@ -39,6 +39,7 @@ motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
 motor Lift = motor(PORT1, false);
 motor Intake = motor(PORT6, true);
 sonar Distance_Sensor = sonar(PORT2);
+touchled TouchLED = touchled(PORT3);
 
 
 // generating and setting random seed
@@ -88,7 +89,7 @@ int rc_auto_loop_function_Controller() {
         // check if the left motor has already been stopped
         if (DrivetrainLNeedsToBeStopped_Controller) {
           // stop the left drive motor
-          LeftDriveSmart.stop();
+          LeftDriveSmart.stop(coast);
           // tell the code that the left motor has been stopped
           DrivetrainLNeedsToBeStopped_Controller = false;
         }
@@ -101,7 +102,7 @@ int rc_auto_loop_function_Controller() {
         // check if the right motor has already been stopped
         if (DrivetrainRNeedsToBeStopped_Controller) {
           // stop the right drive motor
-          RightDriveSmart.stop();
+          RightDriveSmart.stop(coast);
           // tell the code that the right motor has been stopped
           DrivetrainRNeedsToBeStopped_Controller = false;
         }
@@ -138,9 +139,15 @@ task rc_auto_loop_task_Controller(rc_auto_loop_function_Controller);
 using namespace vex;
 
 float myVariable;
+bool autonHasStarted = false;
 
 // "when started" hat block
 int whenStarted1() {
+  Drivetrain.setStopping(coast);
+  Lift.setStopping(coast);
+  Intake.setStopping(coast);
+  Ratchet.setStopping(coast);
+  
   Drivetrain.setDriveVelocity(100.0, percent);
   Drivetrain.setTurnVelocity(100.0, percent);
   Ratchet.setVelocity(100.0, percent);
@@ -151,65 +158,77 @@ int whenStarted1() {
   Intake.setVelocity(100.0, percent);
   Intake.setMaxTorque(100.0, percent);
   Ratchet.spinToPosition(0.0, degrees, true);
+  TouchLED.setColor(red);
   return 0;
 }
 
 // "when Controller ButtonRUp pressed" hat block
-void onevent_ControllerButtonRUp_pressed_0() {
-Drivetrain.turnFor(left,19,degrees,true);
-Drivetrain.driveFor(forward,260,mm,true);
-Lift.spinToPosition(730,degrees,true);
-wait(0.5,seconds);
-Lift.spinToPosition(0,degrees, true);
-Drivetrain.driveFor(reverse,100,mm,true);
-Drivetrain.turnFor(right,15,degrees,true);
-Intake.spin(forward);
-Drivetrain.setTimeout(2,seconds);
-Drivetrain.driveFor(forward,135,mm,true);
-Drivetrain.setTimeout(0,seconds);
-Drivetrain.driveFor(reverse,80,mm,true);
-Drivetrain.turnFor(left, 28,degrees,true);
-wait(1.75,seconds);
-Intake.stop();
-Drivetrain.setTimeout(2,seconds);
-Drivetrain.driveFor(forward,120,mm,true);
-Drivetrain.setTimeout (0,seconds);
-Lift.spinToPosition(730,degrees,true);
-wait(0.5,seconds);
-Lift.spinToPosition(0,degrees, true);
-Drivetrain.driveFor(reverse,160,mm,true);
-Drivetrain.turnFor(right,38,degrees,true);
-Intake.spin(forward);
-Drivetrain.setTimeout(3,seconds);
-Drivetrain.driveFor(forward,150,mm,true);
-Drivetrain.driveFor(reverse,160,mm,true);
-Drivetrain.setTimeout(0,seconds);
-Drivetrain.turnFor(left,38,degrees,true);
-wait(0.5,seconds);
-Intake.stop();
-Drivetrain.setTimeout(3,seconds);
-Drivetrain.driveFor(forward,225,mm,true);
-Drivetrain.setTimeout(0,seconds);
-Lift.spinToPosition(730,degrees,true);
-wait(1,seconds);
-Lift.spinToPosition(0,degrees, true);
+void onevent_TouchLED_Pressed_0() 
+{
+  if (autonHasStarted) {
+    Drivetrain.stop(coast);
+    Lift.stop(coast);
+    Intake.stop(coast);
+    Ratchet.stop(coast);
+    Brain.program_stop();
+    TouchLED.setColor(red);
+    return;
+  }
+  
+  autonHasStarted = true;
+  TouchLED.setColor(green)
+
+  Drivetrain.turnFor(left,19,degrees,true);
+  Drivetrain.driveFor(forward,260,mm,true);
+  Lift.spinToPosition(730,degrees,true);
+  wait(0.5,seconds);
+  Lift.spinToPosition(0,degrees, true);
+  Drivetrain.driveFor(reverse,100,mm,true);
+  Drivetrain.turnFor(right,15,degrees,true);
+  Intake.spin(forward);
+  Drivetrain.setTimeout(2,seconds);
+  Drivetrain.driveFor(forward,135,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Drivetrain.driveFor(reverse,80,mm,true);
+  Drivetrain.turnFor(left, 28,degrees,true);
+  wait(1.75,seconds);
+  Intake.stop(coast);
+  Drivetrain.setTimeout(2,seconds);
+  Drivetrain.driveFor(forward,120,mm,true);
+  Drivetrain.setTimeout (0,seconds);
+  Lift.spinToPosition(730,degrees,true);
+  wait(0.5,seconds);
+  Lift.spinToPosition(0,degrees, true);
+  Drivetrain.driveFor(reverse,160,mm,true);
+  Drivetrain.turnFor(right,38,degrees,true);
+  Intake.spin(forward);
+  Drivetrain.setTimeout(3,seconds);
+  Drivetrain.driveFor(forward,150,mm,true);
+  Drivetrain.driveFor(reverse,160,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Drivetrain.turnFor(left,38,degrees,true);
+  wait(0.5,seconds);
+  Intake.stop(coast);
+  Drivetrain.setTimeout(3,seconds);
+  Drivetrain.driveFor(forward,225,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Lift.spinToPosition(730,degrees,true);
+  wait(1,seconds);
+  Lift.spinToPosition(0,degrees, true);
 }
 
-// ALTERNATIVE AUTONOMOUS CODE
-//Drivetrain.turnFor(left,50 , degrees,true);
-//Intake.spin(forward);
-//Drivetrain.driveFor(forward, 425, mm, true);
-//Intake.stop();
-//Drivetrain.setStopping(coast);
 
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  // register event handlers
-  Controller.ButtonRUp.pressed(onevent_ControllerButtonRUp_pressed_0);
-
-  wait(15, msec);
   whenStarted1();
+
+  // register event handlers
+  TouchLED.pressed(onevent_TouchLED_Pressed_0);
+
+  while (true) {
+    wait(20, msec);
+  }
 }
