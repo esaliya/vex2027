@@ -1,1 +1,212 @@
-{"mode":"Blocks","hardwareTarget":"brain","workspace":"<xml xmlns=\"https://developers.google.com/blockly/xml\"><variables><variable id=\"_2.^beQjx|FGt38A,8(E\">myVariable</variable><variable id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</variable><variable id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</variable></variables><block type=\"iq_events_when_started\" id=\".NsXwU_L.OuU1l7Sho$F\" x=\"810\" y=\"70\"><next><block type=\"iq_variables_set_variable\" id=\"uHCiG3v}-C60fZyK#Ene\"><field name=\"VARIABLE\" id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"ND}c:y7t{b9Adi~p~8i3\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_stopping\" id=\";t?wBlG{)N5^RXaVF,_$\"><field name=\"MOTOR\">Motor7</field><field name=\"MODE\">brake</field><next><block type=\"iq_motion_set_motor_stopping\" id=\"wm?=HZ)%%zE3uo$t%)yk\"><field name=\"MOTOR\">Motor12</field><field name=\"MODE\">brake</field><next><block type=\"iq_control_forever\" id=\"3iLSln*}ylLYRjp=u3K`\"><statement name=\"SUBSTACK\"><block type=\"iq_control_if_then_else\" id=\"R4g`%Zg9C_}xXR9)zKDB\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\"Ktjj!uY6FRmDi!B6U+ht\"><field name=\"BUTTON\">ButtonEUp</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_control_wait_until\" id=\"!YP]ll;KPsat,?d.4O[U\"><value name=\"CONDITION\"><block type=\"iq_operator_not\" id=\"*?qa}0Kl$;`%Nmp!j-TL\"><value name=\"OPERAND\"><block type=\"iq_sensing_pressing_controller\" id=\"K@DWZLOXOeaWmHOha7R!\"><field name=\"BUTTON\">ButtonEUp</field></block></value></block></value><next><block type=\"iq_control_repeat_until\" id=\"_([EBy6;F4,@{3dtTM.v\"><value name=\"CONDITION\"><block type=\"iq_operator_comparison\" id=\"lM2gj(B+w*c$.x9(8mOF\"><field name=\"COMPARISON\">&lt;</field><value name=\"NUM1\"><shadow type=\"math_number_string\" id=\"Pj0o-,S?|l0hUR3L.T3j\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_distance_object_distance\" id=\"DGq,Dgm4H0;wkrbAdvD?\"><field name=\"DISTANCE\">Distance11</field><field name=\"UNITS\">mm</field></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"PrqK)jdD621S+e4@{1W~\"><field name=\"NUM\">30</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\"TYV_(*gNWg~ufY.Pfsar\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"5((5@/2U!rSBWC%}y4M`\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"-g(MD=ND::ok[[:ds=V^\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"GokmWQT%H$mX.-zYKR,r\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"3MUHOdctT9uzH2Q69dLH\"><field name=\"MOTOR\">Motor7</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_motion_spin\" id=\"A+[uM:K[]?]s5#K^84,F\"><field name=\"MOTOR\">Motor12</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_variables_set_variable\" id=\"H%!l+#t.Rc;ZUk6R^XcE\"><field name=\"VARIABLE\" id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"SIID!lv$RaE~@{Ru!M7:\"><field name=\"NUM\">1</field></shadow></value></block></next></block></next></block></next></block></next></block></statement><next><block type=\"iq_motion_set_motor_velocity\" id=\"y0JTU0X3D8fJ#olkWAK:\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"}4hrEb*VEp0X@)%uq0{j\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"n*@Owi4FyQ!Sq)@.t=vY\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"VpqNF0M.3ViaYPPHHTHi\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin_for\" id=\"5k,t$#t8rk+mZ/7KGyJE\"><field name=\"MOTOR\">Motor7</field><field name=\"DIRECTION\">fwd</field><field name=\"UNITS\">deg</field><field name=\"anddontwait_mutator\">true</field><value name=\"AMOUNT\"><shadow type=\"math_number\" id=\"I[(Yq9b29IIeYuG-F%T2\"><field name=\"NUM\">130</field></shadow></value><next><block type=\"iq_motion_spin_for\" id=\"JQT?t@B[r(aB([-NyJK#\"><field name=\"MOTOR\">Motor12</field><field name=\"DIRECTION\">fwd</field><field name=\"UNITS\">deg</field><field name=\"anddontwait_mutator\">true</field><value name=\"AMOUNT\"><shadow type=\"math_number\" id=\"3Rm4mcYjnI/Z0/6}6?8-\"><field name=\"NUM\">130</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"bwG|n#lsRdP]bjRlFBuU\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"=`M+:Ii.}}q4gDAj_Iom\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"J%Qej?#.!6CIc-ZMM.j%\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"Dp.yG0@S0U,?%QNU#,rz\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></next></block></next></block></next></block></next></block></statement><statement name=\"SUBSTACK2\"><block type=\"iq_control_if_then_else\" id=\";b1(UwXJ#7!Rpe:FI^tX\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\"{xhP!C9iyJ~XmJZMFX7V\"><field name=\"BUTTON\">ButtonEDown</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_control_if_then\" id=\"~FE.:oUf(3ZL,,]Q!i{0\"><value name=\"CONDITION\"><block type=\"iq_operator_comparison\" id=\"}y9G|Bdu+aqPv;/80Q*y\"><field name=\"COMPARISON\">==</field><value name=\"NUM1\"><shadow type=\"math_number_string\" id=\"10bcsz0r529S,0-2zBdn\"><field name=\"NUM\">0</field></shadow><block type=\"iq_variables_variable\" id=\"#ZrmZhzX!kGn.q:g8wnh\"><field name=\"VARIABLE\" id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</field></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"`J4)T9s=50UZc[a6S!_Y\"><field name=\"NUM\">1</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\"JrI_(zG*|hw/kvz0YHR`\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"0!mRa.qw3bkA5wmOw(sw\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"M`,-[an*Y=bT,(=Y@LNL\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\";zn}iF1,a1RsL)rFs:my\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin_for\" id=\"h(}r%..#4BvlcZuO{=Ac\"><field name=\"MOTOR\">Motor7</field><field name=\"DIRECTION\">fwd</field><field name=\"UNITS\">deg</field><field name=\"anddontwait_mutator\">true</field><value name=\"AMOUNT\"><shadow type=\"math_number\" id=\"9+X,67!W2KiIPhoEz[=U\"><field name=\"NUM\">600</field></shadow></value><next><block type=\"iq_motion_spin_for\" id=\"BWA]i7pUv+9853O-R3^3\"><field name=\"MOTOR\">Motor12</field><field name=\"DIRECTION\">fwd</field><field name=\"UNITS\">deg</field><field name=\"anddontwait_mutator\">true</field><value name=\"AMOUNT\"><shadow type=\"math_number\" id=\"0|P+Kl@mB1;XvlA2v9/Z\"><field name=\"NUM\">600</field></shadow></value><next><block type=\"iq_variables_set_variable\" id=\"ommcY[`iF7W}+qM_M~Dl\"><field name=\"VARIABLE\" id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"#kFt,py%s_v=)^Q?S;+(\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></next></block></statement><next><block type=\"iq_control_if_then\" id=\"4OG{ssL7+TCacQKvlL-m\"><value name=\"CONDITION\"><block type=\"iq_operator_comparison\" id=\".Y+RTgzTQsqh.kD+3/n;\"><field name=\"COMPARISON\">==</field><value name=\"NUM1\"><shadow type=\"math_number_string\"><field name=\"NUM\">0</field></shadow><block type=\"iq_variables_variable\" id=\"0sylT/aqq:ZuA9s:PcuY\"><field name=\"VARIABLE\" id=\"8hMvWJe10~zgF(=Zm{]L\">zhuantai</field></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"xAr!Rpc,!XKv0gs,X!21\"><field name=\"NUM\">0</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\"dnT}43hB{LwV$@n_9I7S\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"DTKlhFMD9E$l866Kpgte\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\".I3=rKm!2XO{s2aGmt)Z\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"8WAm8Psr(8vJGF#S.3^T\"><field name=\"NUM\">0</field></shadow></value></block></next></block></statement></block></next></block></statement><statement name=\"SUBSTACK2\"><block type=\"iq_motion_set_motor_velocity\" id=\"W8fG!U.c;upu.ZHLt*4K\"><field name=\"MOTOR\">Motor7</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"[2p*5K}+%u0u.ow5IRNH\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"0i_($`M9]ds]:w17-c,q\"><field name=\"MOTOR\">Motor12</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"+p.Nk5{^fah+SdSR^pnu\"><field name=\"NUM\">0</field></shadow></value></block></next></block></statement></block></statement></block></statement></block></next></block></next></block></next></block></next></block><block type=\"iq_events_when_started\" id=\"bLl:8krC~b-oH48(5LO~\" x=\"1470\" y=\"50\"><next><block type=\"iq_variables_set_variable\" id=\"kTouK+c5^kWDM_9?PRmp\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"2*YuR.H!z;I6kCXCOpZK\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_stopping\" id=\"1Jlr6g[Bm55m3btf[RU$\"><field name=\"MOTOR\">Motor1</field><field name=\"MODE\">hold</field><next><block type=\"iq_control_forever\" id=\"n1g=1cGv3!rx+N~G0o}#\"><statement name=\"SUBSTACK\"><block type=\"iq_control_if_then\" id=\"UfyTg@ZJ$Wy`8(~6=O^6\"><value name=\"CONDITION\"><block type=\"iq_operator_comparison\" id=\"t;o;0^tLs5+B+ZNP^3js\"><field name=\"COMPARISON\">==</field><value name=\"NUM1\"><shadow type=\"math_number_string\" id=\"o5OrEYl|=)J@C2XmF7/7\"><field name=\"NUM\">0</field></shadow><block type=\"iq_variables_variable\" id=\"kCc#_A7xhyh5z=9A@g`,\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"kl;i!t}OT/pJ|x=~|C-@\"><field name=\"NUM\">1</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\"(by;GR.:!^Ch`H6?(^_Z\"><field name=\"MOTOR\">Motor6</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"%H9)UOV1`9J68E)!8@S-\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"cypKBn47V}t.;28!#_^^\"><field name=\"MOTOR\">Motor6</field><field name=\"DIRECTION\">fwd</field></block></next></block></statement><next><block type=\"iq_control_if_then\" id=\"o_tgXMz~hM3t6%1G5o+t\"><value name=\"CONDITION\"><block type=\"iq_operator_comparison\" id=\"m$UmownCf[kUIy0=89wn\"><field name=\"COMPARISON\">==</field><value name=\"NUM1\"><shadow type=\"math_number_string\"><field name=\"NUM\">0</field></shadow><block type=\"iq_variables_variable\" id=\"#@3{n.]siJ6/wwK=_Xbp\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\".:=Oq],~`{V/1I.o~H0`\"><field name=\"NUM\">0</field></shadow></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\",j]z?NpmVv/k[/@ya+@Y\"><field name=\"MOTOR\">Motor6</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"Vv/MhF(s@?}clx9~:d8@\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"~]a5(ozZYZ9_/B(:4y]Y\"><field name=\"MOTOR\">Motor6</field><field name=\"DIRECTION\">fwd</field></block></next></block></statement><next><block type=\"iq_control_if_then\" id=\"{(X_e[U3xoYIZj-j+rt3\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\"N7P`sB-RnHHJ;*OYMcz$\"><field name=\"BUTTON\">ButtonLUp</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_variables_set_variable\" id=\"|dQxxl78;.($jO`j+HkM\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"=3D5*{G=EBfwS+#G3!pl\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_stopping\" id=\"aerAZ.(Sxb8S;g#6CXQ6\"><field name=\"MOTOR\">Motor1</field><field name=\"MODE\">hold</field><next><block type=\"iq_motion_set_motor_velocity\" id=\"1$-Urz,FFl*Mz$Y+eYWz\"><field name=\"MOTOR\">Motor1</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"3b1ydRnt]AAx|Xx/UTw_\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"[z5z6n?Zi/2xg!xD_tz.\"><field name=\"MOTOR\">Motor1</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_control_wait_until\" id=\"{2`Zz.F68[I;l6Gge@Q2\"><value name=\"CONDITION\"><block type=\"iq_operator_not\" id=\")Vfg|tPwzs(eiX@85|nY\"><value name=\"OPERAND\"><block type=\"iq_sensing_pressing_controller\" id=\"*DDrIoKdU*!CS@rzJ%aj\"><field name=\"BUTTON\">ButtonLUp</field></block></value></block></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"*4^J/E0yIwSK!sZQY:U?\"><field name=\"MOTOR\">Motor1</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"UP3y$]?CuhKg#*KDV744\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></next></block></next></block></statement><next><block type=\"iq_control_if_then\" id=\".im4[^^8;)09}uyVymkt\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\"s1C`==l7MLz,{cAAa5.F\"><field name=\"BUTTON\">ButtonLDown</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_stopping\" id=\"8PETD_?UxIx=n5ga)^)N\"><field name=\"MOTOR\">Motor1</field><field name=\"MODE\">brake</field><next><block type=\"iq_motion_set_motor_velocity\" id=\"*_U(y3Z9BdN4!wJ70MmY\"><field name=\"MOTOR\">Motor1</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"gf/tI5GA4[q9)edUBMJL\"><field name=\"NUM\">100</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"1EH^6M[j6i2obKvsMa+h\"><field name=\"MOTOR\">Motor1</field><field name=\"DIRECTION\">rev</field><next><block type=\"iq_control_wait_until\" id=\"fs!jy1_diWsU!~X95N_j\"><value name=\"CONDITION\"><block type=\"iq_operator_not\" id=\"3=#t(bX[W.4HuSH{S9{O\"><value name=\"OPERAND\"><block type=\"iq_sensing_pressing_controller\" id=\")r??`.JzVV4u=o`*2(A8\"><field name=\"BUTTON\">ButtonLDown</field></block></value></block></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"rUU3}t1aCdiD0:uo!Hz@\"><field name=\"MOTOR\">Motor1</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"/VCwU0mU/ynS@!idGT7v\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_variables_set_variable\" id=\"4h6:81*M^@pXM}z@yC[%\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"uIR7zNK-?H!hcyrO*;Z=\"><field name=\"NUM\">1</field></shadow></value></block></next></block></next></block></next></block></next></block></next></block></statement><next><block type=\"iq_control_if_then\" id=\"Or|.TgA~YAl40Bw:SJkJ\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\":Im3F?p4YbYpVNX.cqf{\"><field name=\"BUTTON\">ButtonFUp</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_variables_set_variable\" id=\".J(A6+s,G|mtX6LjH{nx\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"Nu/0tO#{iVEqe*K9Nv)^\"><field name=\"NUM\">1</field></shadow></value></block></statement><next><block type=\"iq_control_if_then_else\" id=\")AJpx|ab:7!/?B~8TAh3\"><value name=\"CONDITION\"><block type=\"iq_sensing_pressing_controller\" id=\"U*T)w^[5:MO*!q[%%9[n\"><field name=\"BUTTON\">ButtonFDown</field></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_set_motor_velocity\" id=\"y4A}Sry}2%Q;;z5O7uuc\"><field name=\"MOTOR\">Motor6</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"Xdg]g8UneK|b!;8^,S9s\"><field name=\"NUM\">-100</field></shadow></value><next><block type=\"iq_motion_spin\" id=\"+eyz[#UgvC@FsisSf);J\"><field name=\"MOTOR\">Motor6</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_control_wait_until\" id=\"a?o0f:g*;-+M$?iQ{b4;\"><value name=\"CONDITION\"><block type=\"iq_operator_not\" id=\"sXkGS{kf8bT)EM32.g/^\"><value name=\"OPERAND\"><block type=\"iq_sensing_pressing_controller\" id=\"8Y6sN6_j^7h!aZbvR/K!\"><field name=\"BUTTON\">ButtonFDown</field></block></value></block></value><next><block type=\"iq_variables_set_variable\" id=\"=*EI8!H_rw!Sgv`I(dV6\"><field name=\"VARIABLE\" id=\"Eo#0/-wH`1Nph|@?uK~k\">xu</field><value name=\"VALUE\"><shadow type=\"math_number_string\" id=\"lTivv8|l;6(2Flvtx{G3\"><field name=\"NUM\">0</field></shadow></value></block></next></block></next></block></next></block></statement></block></next></block></next></block></next></block></next></block></next></block></statement></block></next></block></next></block></next></block><block type=\"iq_events_when_started\" id=\"hM`NfC}#j7v_Ht+_,cWL\" x=\"-490\" y=\"270\"><next><block type=\"iq_motion_set_motor_stopping\" id=\"VtrKiu9e`?T^%sjDA[7t\"><field name=\"MOTOR\">Motor9left</field><field name=\"MODE\">brake</field><next><block type=\"iq_motion_set_motor_stopping\" id=\"ggv#ylnUs?]0VfXw$5$4\"><field name=\"MOTOR\">Motor10right</field><field name=\"MODE\">brake</field><next><block type=\"iq_sensing_inertial_calibrate\" id=\"}|1-dS59M_BP`Ga2dy5~\"><next><block type=\"iq_sensing_set_gyro_rotation\" id=\"bd3.#H~$6kyUSSd,yuTN\"><field name=\"GYRO\">BrainInertial</field><value name=\"VALUE\"><shadow type=\"math_number\" id=\"p53Yiy@k+)[$i9XQRR#*\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_control_forever\" id=\"E7GBaj7s)jFm(x0o-NKC\"><statement name=\"SUBSTACK\"><block type=\"iq_control_if_then_else\" id=\"RN9p3JWV5T6M@CL4PxbM\"><value name=\"CONDITION\"><block type=\"iq_operator_and_or\" id=\"i8dRNkJut)d.}cGEQ+.7\"><field name=\"CHECK\">or</field><value name=\"OPERAND1\"><block type=\"iq_operator_comparison\" id=\"}orJUuHOBp96`olXu@R4\"><field name=\"COMPARISON\">&gt;</field><value name=\"NUM1\"><shadow type=\"math_number_string\" id=\"a=br)~}uN02CB;FaMxhZ\"><field name=\"NUM\">0</field></shadow><block type=\"iq_operator_function\" id=\"o|JnoK4`Pe(m{-m(ew_J\"><field name=\"OPERATOR\">abs</field><value name=\"NUM\"><shadow type=\"math_number\" id=\"KQIihKbEE6TLn%c_{!r?\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\"__2z6xS32=C(2@.:-^7X\"><field name=\"AXIS\">AxisA</field></block></value></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"O?t}ZoL_CzJ|Uf1@0YL(\"><field name=\"NUM\">10</field></shadow></value></block></value><value name=\"OPERAND2\"><block type=\"iq_operator_comparison\" id=\"!Ux%oQSK3%6!h~?zB`Dr\"><field name=\"COMPARISON\">&gt;</field><value name=\"NUM1\"><shadow type=\"math_number_string\"><field name=\"NUM\">0</field></shadow><block type=\"iq_operator_function\" id=\"@6-5*V+;oYnmiv.0l@C!\"><field name=\"OPERATOR\">abs</field><value name=\"NUM\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\")?m1(5HguqeA2KQ$bQ]#\"><field name=\"AXIS\">AxisC</field></block></value></block></value><value name=\"NUM2\"><shadow type=\"math_number_string\" id=\"0%Ib+_MhLkl?GBo~/c1Q\"><field name=\"NUM\">10</field></shadow></value></block></value></block></value><statement name=\"SUBSTACK\"><block type=\"iq_motion_spin\" id=\"J$^q]7ejchAIN2d8/{c@\"><field name=\"MOTOR\">Motor9left</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_motion_spin\" id=\"x%]xP8*!_*G0W(iJ2f6K\"><field name=\"MOTOR\">Motor10right</field><field name=\"DIRECTION\">fwd</field><next><block type=\"iq_motion_set_motor_velocity\" id=\"L0R*ii6OD0YZcE_H;mM5\"><field name=\"MOTOR\">Motor9left</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"Myo)W2tU~_5-z[$lwBZt\"><field name=\"NUM\">50</field></shadow><block type=\"iq_operator_math\" id=\"FEtn.cYMjYa6^TZ@TIue\"><field name=\"MATH\">+</field><value name=\"NUM1\"><shadow type=\"math_number\" id=\"jSInKlK+#T)qrSJH,faA\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\"J/MogPR$x/_ilSOvDoM@\"><field name=\"AXIS\">AxisA</field></block></value><value name=\"NUM2\"><shadow type=\"math_number\" id=\"~rSY(*He5~~JBDbvI47H\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\"Tx.c:3s!%a0pFI%d(*Tp\"><field name=\"AXIS\">AxisC</field></block></value></block></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"bb`N2xQb/YpXW{OU@Hdg\"><field name=\"MOTOR\">Motor10right</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"GM?mj[K^bjkJOw|[Bbyl\"><field name=\"NUM\">50</field></shadow><block type=\"iq_operator_math\" id=\"[G|vox`/7i:Q6vFD`G$C\"><field name=\"MATH\">-</field><value name=\"NUM1\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\"mYKoX^7QSft3(Tsi{Rd!\"><field name=\"AXIS\">AxisA</field></block></value><value name=\"NUM2\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow><block type=\"iq_sensing_position_of_controller\" id=\"LlL@qn{U]+Tny9zh+i$R\"><field name=\"AXIS\">AxisC</field></block></value></block></value></block></next></block></next></block></next></block></statement><statement name=\"SUBSTACK2\"><block type=\"iq_motion_set_motor_velocity\" id=\"Y`mA2(-xSGxae|y~,09a\"><field name=\"MOTOR\">Motor9left</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"ORTIR@j?tC(a??_=@gQC\"><field name=\"NUM\">0</field></shadow></value><next><block type=\"iq_motion_set_motor_velocity\" id=\"Ju|rK@i[rDs@W+S|TD|f\"><field name=\"MOTOR\">Motor10right</field><field name=\"UNITS\">pct</field><value name=\"VELOCITY\"><shadow type=\"math_number\" id=\"q.*FRe9|cDwR{G|uI[zk\"><field name=\"NUM\">0</field></shadow></value></block></next></block></statement></block></statement></block></next></block></next></block></next></block></next></block></next></block></xml>","robotConfig":[{"port":[],"name":"Controller","customName":false,"deviceType":"Controller","deviceClass":"controller","setting":{"left":"","leftDir":"false","right":"","rightDir":"false","e":"","eDir":"false","f":"","fDir":"false","l3r3":"","l3r3Dir":"false","drive":"none"},"triportSourcePort":22},{"port":[7],"name":"Motor7","customName":false,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"false","fwd":"向前","rev":"撤销"},"triportSourcePort":22},{"port":[12],"name":"Motor12","customName":false,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"true","fwd":"向前","rev":"撤销"},"triportSourcePort":22},{"port":[6],"name":"Motor6","customName":false,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"true","fwd":"向前","rev":"撤销"},"triportSourcePort":22},{"port":[11],"name":"Distance11","customName":false,"deviceType":"Distance","deviceClass":"distance","setting":{},"triportSourcePort":22},{"port":[1],"name":"Motor1","customName":false,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"false","fwd":"向前","rev":"撤销"},"triportSourcePort":22},{"port":[9],"name":"Motor9left","customName":true,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"true","fwd":"向前","rev":"撤销"},"triportSourcePort":22},{"port":[10],"name":"Motor10right","customName":true,"deviceType":"Motor","deviceClass":"motor","setting":{"reversed":"false","fwd":"向前","rev":"撤销"},"triportSourcePort":22}],"slot":1,"platform":"IQ","sdkVersion":"20230818.11.00.00","appVersion":"4.68.1","fileFormat":"2.0.0","targetBrainGen":"Second","v5SoundsEnabled":false,"downloadLanguage":"python","virtualSkillsYear":"2023"}
+#pragma region VEXcode Generated Robot Configuration
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+#include <string.h>
+
+
+#include "vex.h"
+
+using namespace vex;
+
+brain Brain;
+
+
+#define waitUntil(condition)                                                   \
+  do {                                                                         \
+    wait(5, msec);                                                             \
+  } while (!(condition))
+
+#define repeat(iterations)                                                     \
+  for (int iterator = 0; iterator < iterations; iterator++)
+
+
+inertial BrainInertial = inertial();
+motor LeftDriveSmart = motor(PORT9, 1, true);
+motor RightDriveSmart = motor(PORT10, 1, false);
+drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 200, 173, 76, mm, 1);
+controller Controller = controller();
+motor RatchetMotorA = motor(PORT12, true);
+motor RatchetMotorB = motor(PORT7, false);
+motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
+
+motor Lift = motor(PORT1, false);
+motor Intake = motor(PORT6, true);
+sonar Distance_Sensor = sonar(PORT2);
+touchled TouchLED = touchled(PORT8);
+
+
+void initializeRandomSeed(){
+  wait(100,msec);
+  double xAxis = BrainInertial.acceleration(xaxis) * 1000;
+  double yAxis = BrainInertial.acceleration(yaxis) * 1000;
+  double zAxis = BrainInertial.acceleration(zaxis) * 1000;
+  int seed = int(
+    xAxis + yAxis + zAxis
+  );
+  srand(seed); 
+}
+
+
+
+void vexcodeInit() {
+
+  initializeRandomSeed(); 
+}
+
+
+bool RemoteControlCodeEnabled = true;
+bool DrivetrainLNeedsToBeStopped_Controller = true;
+bool DrivetrainRNeedsToBeStopped_Controller = true;
+
+int rc_auto_loop_function_Controller() {
+  while(true) {
+    if(RemoteControlCodeEnabled) {
+      
+      int drivetrainLeftSideSpeed = Controller.AxisA.position() + Controller.AxisC.position();
+      int drivetrainRightSideSpeed = Controller.AxisA.position() - Controller.AxisC.position();
+      
+      if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
+        if (DrivetrainLNeedsToBeStopped_Controller) {
+          LeftDriveSmart.stop();
+          DrivetrainLNeedsToBeStopped_Controller = false;
+        }
+      } else {
+        DrivetrainLNeedsToBeStopped_Controller = true;
+      }
+      if (drivetrainRightSideSpeed < 5 && drivetrainRightSideSpeed > -5) {
+        if (DrivetrainRNeedsToBeStopped_Controller) {
+          RightDriveSmart.stop();
+          DrivetrainRNeedsToBeStopped_Controller = false;
+        }
+      } else {
+        DrivetrainRNeedsToBeStopped_Controller = true;
+      }
+      
+      if (DrivetrainLNeedsToBeStopped_Controller) {
+        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
+        LeftDriveSmart.spin(forward);
+      }
+      if (DrivetrainRNeedsToBeStopped_Controller) {
+        RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
+        RightDriveSmart.spin(forward);
+      }
+    }
+    wait(20, msec);
+  }
+  return 0;
+}
+
+task rc_auto_loop_task_Controller(rc_auto_loop_function_Controller);
+
+#pragma endregion VEXcode Generated Robot Configuration
+
+#include "vex.h"
+  
+using namespace vex;
+
+float myVariable;
+bool isRobotActive = true;
+
+void activateEmergencyStop() {
+  isRobotActive = false;
+  RemoteControlCodeEnabled = false;
+  TouchLED.on(color::red);
+
+  LeftDriveSmart.stop(brakeType::coast);
+  RightDriveSmart.stop(brakeType::coast);
+  Ratchet.stop(brakeType::coast);
+  Lift.stop(brakeType::coast);
+  Intake.stop(brakeType::coast);
+}
+
+void resumeRobotState() {
+  isRobotActive = true;
+  RemoteControlCodeEnabled = true;
+  TouchLED.on(color::green);
+
+  Drivetrain.setDriveVelocity(100.0, percent);
+  Drivetrain.setTurnVelocity(100.0, percent);
+  Ratchet.setVelocity(100.0, percent);
+  Lift.setVelocity(100.0, percent);
+  Intake.setVelocity(100.0, percent);
+}
+
+int whenStarted1() {
+  Drivetrain.setDriveVelocity(100.0, percent);
+  Drivetrain.setTurnVelocity(100.0, percent);
+  Ratchet.setVelocity(100.0, percent);
+  Ratchet.setMaxTorque(100.0, percent);
+  Lift.setVelocity(100.0, percent);
+  Lift.setMaxTorque(100.0, percent);
+  Intake.setVelocity(100.0, percent);
+  Intake.setMaxTorque(100.0, percent);
+  Ratchet.spinToPosition(0.0, degrees, true);
+
+  TouchLED.on(color::green);
+  return 0;
+}
+
+void onevent_ControllerButtonRUp_pressed_0() {
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 0.2, turns, true);
+  wait(0.2, seconds);
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 3.14, turns, true);
+}
+
+void onevent_ControllerButtonLUp_pressed_0() {
+  if (!isRobotActive) return;
+  Lift.spinToPosition(710.0, degrees, true);
+}
+
+void onevent_ControllerButtonLDown_pressed_0() {
+  if (!isRobotActive) return;
+  Lift.spinToPosition(0.0, degrees, true);
+}
+
+void onevent_ControllerButtonEUp_pressed_0() {
+  if (!isRobotActive) return;
+  Intake.spin(forward);
+}
+
+void onevent_ControllerButtonL3_pressed_0() {
+  if (!isRobotActive) return;
+  Intake.stop();
+}
+
+void onevent_ControllerButtonFDown_pressed_0() {
+  if (!isRobotActive) return;
+  Intake.spin(reverse);
+}
+
+void onevent_ControllerButtonR3_pressed_0() {
+  if (!isRobotActive) return;
+  Ratchet.spinFor(forward, 0.2, turns, true);
+}
+
+void onevent_TouchLED_pressed_0() {
+  if (isRobotActive) {
+    activateEmergencyStop();
+  } else {
+    resumeRobotState();
+  }
+}
+
+
+int main() {
+  vexcodeInit();
+
+  Controller.ButtonRUp.pressed(onevent_ControllerButtonRUp_pressed_0);
+  Controller.ButtonLUp.pressed(onevent_ControllerButtonLUp_pressed_0);
+  Controller.ButtonLDown.pressed(onevent_ControllerButtonLDown_pressed_0);
+  Controller.ButtonEUp.pressed(onevent_ControllerButtonEUp_pressed_0);
+  Controller.ButtonL3.pressed(onevent_ControllerButtonL3_pressed_0);
+  Controller.ButtonFDown.pressed(onevent_ControllerButtonFDown_pressed_0);
+  Controller.ButtonR3.pressed(onevent_ControllerButtonR3_pressed_0);
+  TouchLED.pressed(onevent_TouchLED_pressed_0);
+
+  wait(15, msec);
+  whenStarted1();
+}
