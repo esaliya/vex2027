@@ -39,7 +39,7 @@ motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
 motor Lift = motor(PORT1, false);
 motor Intake = motor(PORT6, true);
 sonar Distance_Sensor = sonar(PORT2);
-touchled TouchLED = touchled(PORT3);
+touchled TouchLED = touchled(PORT8);
 
 
 // generating and setting random seed
@@ -141,6 +141,9 @@ using namespace vex;
 float myVariable;
 bool autonHasStarted = false;
 
+int autonomousSequence();
+task autonTask;
+
 // "when started" hat block
 int whenStarted1() {
   Drivetrain.setStopping(coast);
@@ -149,7 +152,7 @@ int whenStarted1() {
   Ratchet.setStopping(coast);
   
   Drivetrain.setDriveVelocity(100.0, percent);
-  Drivetrain.setTurnVelocity(100.0, percent);
+  Drivetrain.setTurnVelocity(75.0, percent);
   Ratchet.setVelocity(100.0, percent);
   Ratchet.setMaxTorque(100.0, percent);
   Lift.setVelocity(100.0, percent);
@@ -157,67 +160,72 @@ int whenStarted1() {
   Lift.setPosition(0,degrees);
   Intake.setVelocity(100.0, percent);
   Intake.setMaxTorque(100.0, percent);
-  Ratchet.spinToPosition(0.0, degrees, true);
+  Ratchet.spinToPosition(0.0, degrees, false);
   TouchLED.setColor(red);
   return 0;
 }
 
-// "when Controller ButtonRUp pressed" hat block
+int autonomousSequence() {
+  Drivetrain.turnFor(left,15,degrees,true);
+  Drivetrain.driveFor(forward,75,mm,true);
+  Lift.spinToPosition(730,degrees,true);
+  wait(0.5,seconds);
+  Lift.spinToPosition(0,degrees, true);
+  // Drivetrain.driveFor(reverse,100,mm,true);
+  // Drivetrain.turnFor(right,15,degrees,true);
+  // Intake.spin(forward);
+  // Drivetrain.setTimeout(2,seconds);
+  // Drivetrain.driveFor(forward,135,mm,true);
+  // Drivetrain.setTimeout(0,seconds);
+  // Drivetrain.driveFor(reverse,80,mm,true);
+  // Drivetrain.turnFor(left, 28,degrees,true);
+  // wait(1.75,seconds);
+  // Intake.stop(coast);
+  // Drivetrain.setTimeout(2,seconds);
+  // Drivetrain.driveFor(forward,120,mm,true);
+  // Drivetrain.setTimeout (0,seconds);
+  // Lift.spinToPosition(730,degrees,true);
+  // wait(0.5,seconds);
+  // Lift.spinToPosition(0,degrees, true);
+  // Drivetrain.driveFor(reverse,160,mm,true);
+  // Drivetrain.turnFor(right,38,degrees,true);
+  // Intake.spin(forward);
+  // Drivetrain.setTimeout(3,seconds);
+  // Drivetrain.driveFor(forward,150,mm,true);
+  // Drivetrain.driveFor(reverse,160,mm,true);
+  // Drivetrain.setTimeout(0,seconds);
+  // Drivetrain.turnFor(left,38,degrees,true);
+  // wait(0.5,seconds);
+  // Intake.stop(coast);
+  // Drivetrain.setTimeout(3,seconds);
+  // Drivetrain.driveFor(forward,225,mm,true);
+  // Drivetrain.setTimeout(0,seconds);
+  // Lift.spinToPosition(730,degrees,true);
+  // wait(1,seconds);
+  // Lift.spinToPosition(0,degrees, true);
+  return 0;
+}
+
+//ESTOP code
 void onevent_TouchLED_Pressed_0() 
 {
   if (autonHasStarted) {
+    autonTask.stop();
     Drivetrain.stop(coast);
     Lift.stop(coast);
     Intake.stop(coast);
     Ratchet.stop(coast);
-    Brain.program_stop();
     TouchLED.setColor(red);
+    
+   
+    autonHasStarted = false; 
     return;
   }
   
   autonHasStarted = true;
-  TouchLED.setColor(green)
-
-  Drivetrain.turnFor(left,19,degrees,true);
-  Drivetrain.driveFor(forward,260,mm,true);
-  Lift.spinToPosition(730,degrees,true);
-  wait(0.5,seconds);
-  Lift.spinToPosition(0,degrees, true);
-  Drivetrain.driveFor(reverse,100,mm,true);
-  Drivetrain.turnFor(right,15,degrees,true);
-  Intake.spin(forward);
-  Drivetrain.setTimeout(2,seconds);
-  Drivetrain.driveFor(forward,135,mm,true);
-  Drivetrain.setTimeout(0,seconds);
-  Drivetrain.driveFor(reverse,80,mm,true);
-  Drivetrain.turnFor(left, 28,degrees,true);
-  wait(1.75,seconds);
-  Intake.stop(coast);
-  Drivetrain.setTimeout(2,seconds);
-  Drivetrain.driveFor(forward,120,mm,true);
-  Drivetrain.setTimeout (0,seconds);
-  Lift.spinToPosition(730,degrees,true);
-  wait(0.5,seconds);
-  Lift.spinToPosition(0,degrees, true);
-  Drivetrain.driveFor(reverse,160,mm,true);
-  Drivetrain.turnFor(right,38,degrees,true);
-  Intake.spin(forward);
-  Drivetrain.setTimeout(3,seconds);
-  Drivetrain.driveFor(forward,150,mm,true);
-  Drivetrain.driveFor(reverse,160,mm,true);
-  Drivetrain.setTimeout(0,seconds);
-  Drivetrain.turnFor(left,38,degrees,true);
-  wait(0.5,seconds);
-  Intake.stop(coast);
-  Drivetrain.setTimeout(3,seconds);
-  Drivetrain.driveFor(forward,225,mm,true);
-  Drivetrain.setTimeout(0,seconds);
-  Lift.spinToPosition(730,degrees,true);
-  wait(1,seconds);
-  Lift.spinToPosition(0,degrees, true);
+  TouchLED.setColor(green);
+  autonTask = task(autonomousSequence);
 }
-
-
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
