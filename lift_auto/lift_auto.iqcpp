@@ -35,11 +35,10 @@ controller Controller = controller();
 motor RatchetMotorA = motor(PORT12, true);
 motor RatchetMotorB = motor(PORT7, false);
 motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
-
+touchled TouchLED = touchled(PORT8);
 motor Lift = motor(PORT1, false);
 motor Intake = motor(PORT6, true);
 sonar Distance_Sensor = sonar(PORT2);
-touchled TouchLED = touchled(PORT8);
 
 
 // generating and setting random seed
@@ -89,7 +88,7 @@ int rc_auto_loop_function_Controller() {
         // check if the left motor has already been stopped
         if (DrivetrainLNeedsToBeStopped_Controller) {
           // stop the left drive motor
-          LeftDriveSmart.stop(coast);
+          LeftDriveSmart.stop();
           // tell the code that the left motor has been stopped
           DrivetrainLNeedsToBeStopped_Controller = false;
         }
@@ -102,7 +101,7 @@ int rc_auto_loop_function_Controller() {
         // check if the right motor has already been stopped
         if (DrivetrainRNeedsToBeStopped_Controller) {
           // stop the right drive motor
-          RightDriveSmart.stop(coast);
+          RightDriveSmart.stop();
           // tell the code that the right motor has been stopped
           DrivetrainRNeedsToBeStopped_Controller = false;
         }
@@ -151,8 +150,8 @@ int whenStarted1() {
   Intake.setStopping(coast);
   Ratchet.setStopping(coast);
   
-  Drivetrain.setDriveVelocity(100.0, percent);
-  Drivetrain.setTurnVelocity(75.0, percent);
+  Drivetrain.setDriveVelocity(20.0, percent);
+  Drivetrain.setTurnVelocity(50.0, percent);
   Ratchet.setVelocity(100.0, percent);
   Ratchet.setMaxTorque(100.0, percent);
   Lift.setVelocity(100.0, percent);
@@ -166,27 +165,32 @@ int whenStarted1() {
 }
 
 int autonomousSequence() {
-  Drivetrain.turnFor(left,15,degrees,true);
-  Drivetrain.driveFor(forward,75,mm,true);
+  //BEANBAG 1
+  Drivetrain.setTimeout(2,seconds);
+  Drivetrain.turnFor(left,12,degrees,true);
+  Drivetrain.driveFor(forward,95,mm,true);
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
-  // Drivetrain.driveFor(reverse,100,mm,true);
-  // Drivetrain.turnFor(right,15,degrees,true);
-  // Intake.spin(forward);
-  // Drivetrain.setTimeout(2,seconds);
-  // Drivetrain.driveFor(forward,135,mm,true);
-  // Drivetrain.setTimeout(0,seconds);
-  // Drivetrain.driveFor(reverse,80,mm,true);
-  // Drivetrain.turnFor(left, 28,degrees,true);
-  // wait(1.75,seconds);
-  // Intake.stop(coast);
-  // Drivetrain.setTimeout(2,seconds);
-  // Drivetrain.driveFor(forward,120,mm,true);
-  // Drivetrain.setTimeout (0,seconds);
-  // Lift.spinToPosition(730,degrees,true);
-  // wait(0.5,seconds);
-  // Lift.spinToPosition(0,degrees, true);
+
+  //BEANBAG 2
+  Drivetrain.driveFor(reverse,25,mm,true);
+  Drivetrain.turnFor(right,13.5,degrees,true);
+  Intake.spin(forward);
+  Drivetrain.setTimeout(2,seconds);
+  Drivetrain.driveFor(forward,50,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Drivetrain.driveFor(reverse,20,mm,true);
+  Drivetrain.turnFor(left, 12,degrees,true);
+  wait(1.25,seconds);
+  Intake.stop(coast);
+  Drivetrain.setTimeout(2,seconds);
+  Drivetrain.driveFor(forward,90,mm,true);
+  Drivetrain.setTimeout (0,seconds);
+  Lift.spinToPosition(730,degrees,true);
+  wait(0.5,seconds);
+  Lift.spinToPosition(0,degrees, true);
+
   // Drivetrain.driveFor(reverse,160,mm,true);
   // Drivetrain.turnFor(right,38,degrees,true);
   // Intake.spin(forward);
@@ -203,7 +207,7 @@ int autonomousSequence() {
   // Lift.spinToPosition(730,degrees,true);
   // wait(1,seconds);
   // Lift.spinToPosition(0,degrees, true);
-  return 0;
+  // return 0;
 }
 
 //ESTOP code
