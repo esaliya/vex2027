@@ -1,21 +1,16 @@
 #pragma region VEXcode Generated Robot Configuration
-// Make sure all required headers are included.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
 
-
 #include "vex.h"
 
 using namespace vex;
 
-// Brain should be defined by default
 brain Brain;
 
-
-// START IQ MACROS
 #define waitUntil(condition)                                                   \
   do {                                                                         \
     wait(5, msec);                                                             \
@@ -23,10 +18,7 @@ brain Brain;
 
 #define repeat(iterations)                                                     \
   for (int iterator = 0; iterator < iterations; iterator++)
-// END IQ MACROS
 
-
-// Robot configuration code.
 inertial BrainInertial = inertial();
 motor LeftDriveSmart = motor(PORT9, 1, true);
 motor RightDriveSmart = motor(PORT10, 1, false);
@@ -40,101 +32,65 @@ motor Lift = motor(PORT1, false);
 motor Intake = motor(PORT6, true);
 sonar Distance_Sensor = sonar(PORT2);
 
-
-// generating and setting random seed
 void initializeRandomSeed(){
   wait(100,msec);
   double xAxis = BrainInertial.acceleration(xaxis) * 1000;
   double yAxis = BrainInertial.acceleration(yaxis) * 1000;
   double zAxis = BrainInertial.acceleration(zaxis) * 1000;
-  // Combine these values into a single integer
-  int seed = int(
-    xAxis + yAxis + zAxis
-  );
-  // Set the seed
+  int seed = int(xAxis + yAxis + zAxis);
   srand(seed); 
 }
 
-
-
 void vexcodeInit() {
-
-  // Initializing random seed.
   initializeRandomSeed(); 
 }
 
-
-// define variable for remote controller enable/disable
 bool RemoteControlCodeEnabled = true;
-// define variables used for controlling motors based on controller inputs
 bool DrivetrainLNeedsToBeStopped_Controller = true;
 bool DrivetrainRNeedsToBeStopped_Controller = true;
 
-// define a task that will handle monitoring inputs from Controller
 int rc_auto_loop_function_Controller() {
-  // process the controller input every 20 milliseconds
-  // update the motors based on the input values
   while(true) {
     if(RemoteControlCodeEnabled) {
-      
-      // calculate the drivetrain motor velocities from the controller joystick axies
-      // left = AxisA + AxisC
-      // right = AxisA - AxisC
       int drivetrainLeftSideSpeed = Controller.AxisA.position() + Controller.AxisC.position();
       int drivetrainRightSideSpeed = Controller.AxisA.position() - Controller.AxisC.position();
       
-      // check if the value is inside of the deadband range
       if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
-        // check if the left motor has already been stopped
         if (DrivetrainLNeedsToBeStopped_Controller) {
-          // stop the left drive motor
           LeftDriveSmart.stop();
-          // tell the code that the left motor has been stopped
           DrivetrainLNeedsToBeStopped_Controller = false;
         }
       } else {
-        // reset the toggle so that the deadband code knows to stop the left motor nexttime the input is in the deadband range
         DrivetrainLNeedsToBeStopped_Controller = true;
       }
-      // check if the value is inside of the deadband range
       if (drivetrainRightSideSpeed < 5 && drivetrainRightSideSpeed > -5) {
-        // check if the right motor has already been stopped
         if (DrivetrainRNeedsToBeStopped_Controller) {
-          // stop the right drive motor
           RightDriveSmart.stop();
-          // tell the code that the right motor has been stopped
           DrivetrainRNeedsToBeStopped_Controller = false;
         }
       } else {
-        // reset the toggle so that the deadband code knows to stop the right motor next time the input is in the deadband range
         DrivetrainRNeedsToBeStopped_Controller = true;
       }
       
-      // only tell the left drive motor to spin if the values are not in the deadband range
       if (DrivetrainLNeedsToBeStopped_Controller) {
         LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
         LeftDriveSmart.spin(forward);
       }
-      // only tell the right drive motor to spin if the values are not in the deadband range
       if (DrivetrainRNeedsToBeStopped_Controller) {
         RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
         RightDriveSmart.spin(forward);
       }
     }
-    // wait before repeating the process
     wait(20, msec);
   }
   return 0;
 }
 
 task rc_auto_loop_task_Controller(rc_auto_loop_function_Controller);
-
 #pragma endregion VEXcode Generated Robot Configuration
 
-// Include the IQ Library
 #include "vex.h"
   
-// Allows for easier use of the VEX Library
 using namespace vex;
 
 float myVariable;
@@ -143,7 +99,19 @@ bool autonHasStarted = false;
 int autonomousSequence();
 task autonTask;
 
-// "when started" hat block
+void endAndReportTime() {
+  double finalTime = Brain.Timer.time(seconds);
+  Drivetrain.stop(coast);
+  Lift.stop(coast);
+  Intake.stop(coast);
+  Ratchet.stop(coast);
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("Elapsed Time:");
+  Brain.Screen.setCursor(2, 1);
+  Brain.Screen.print("%.2f sec", finalTime);
+}
+
 int whenStarted1() {
   Drivetrain.setStopping(coast);
   Lift.setStopping(coast);
@@ -164,82 +132,78 @@ int whenStarted1() {
   return 0;
 }
 
-int autonomousSequence() {
-  //BEANBAG 1
+int autonomousSequence() 
+{
   Drivetrain.setTimeout(2,seconds);
-  Drivetrain.turnFor(left,12,degrees,true);
+  Drivetrain.turnFor(left,12.7,degrees,true);
   Drivetrain.driveFor(forward,95,mm,true);
+  Drivetrain.setTimeout(0,seconds);
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
 
-  //BEANBAG 2
-  Drivetrain.driveFor(reverse,25,mm,true);
-  Drivetrain.turnFor(right,13.5,degrees,true);
+  Drivetrain.driveFor(reverse,40,mm,true);
+  Drivetrain.turnFor(right,12,degrees,true);
   Intake.spin(forward);
   Drivetrain.setTimeout(2,seconds);
   Drivetrain.driveFor(forward,50,mm,true);
   Drivetrain.setTimeout(0,seconds);
-  Drivetrain.driveFor(reverse,20,mm,true);
+  Drivetrain.driveFor(reverse,75,mm,true);
   Drivetrain.turnFor(left, 12,degrees,true);
   wait(1.25,seconds);
   Intake.stop(coast);
   Drivetrain.setTimeout(2,seconds);
+  Drivetrain.setDriveVelocity(15,percent);
   Drivetrain.driveFor(forward,90,mm,true);
+  Drivetrain.setDriveVelocity(20,percent);
   Drivetrain.setTimeout (0,seconds);
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
 
-  // Drivetrain.driveFor(reverse,160,mm,true);
-  // Drivetrain.turnFor(right,38,degrees,true);
-  // Intake.spin(forward);
-  // Drivetrain.setTimeout(3,seconds);
-  // Drivetrain.driveFor(forward,150,mm,true);
-  // Drivetrain.driveFor(reverse,160,mm,true);
-  // Drivetrain.setTimeout(0,seconds);
-  // Drivetrain.turnFor(left,38,degrees,true);
-  // wait(0.5,seconds);
-  // Intake.stop(coast);
-  // Drivetrain.setTimeout(3,seconds);
-  // Drivetrain.driveFor(forward,225,mm,true);
-  // Drivetrain.setTimeout(0,seconds);
-  // Lift.spinToPosition(730,degrees,true);
-  // wait(1,seconds);
-  // Lift.spinToPosition(0,degrees, true);
-  // return 0;
+  Drivetrain.driveFor(reverse,50,mm,true);
+  Drivetrain.turnFor(right,17,degrees,true);
+  Intake.spin(forward);
+  Drivetrain.setTimeout(4,seconds);
+  Drivetrain.driveFor(forward,80,mm,true);
+  Drivetrain.driveFor(reverse,80,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Drivetrain.turnFor(left,17,degrees,true);
+  wait(0.5,seconds);
+  Intake.stop(coast);
+  Drivetrain.setTimeout(3,seconds);
+  Drivetrain.driveFor(forward,85,mm,true);
+  Drivetrain.setTimeout(0,seconds);
+  Lift.spinToPosition(730,degrees,true);
+  wait(0.5,seconds);
+  Lift.spinToPosition(0,degrees, true);
+
+  endAndReportTime();
+  autonHasStarted = false;
+  TouchLED.setColor(red);
+  return 0;
 }
 
-//ESTOP code
 void onevent_TouchLED_Pressed_0() 
 {
   if (autonHasStarted) {
     autonTask.stop();
-    Drivetrain.stop(coast);
-    Lift.stop(coast);
-    Intake.stop(coast);
-    Ratchet.stop(coast);
+    endAndReportTime();
     TouchLED.setColor(red);
-    
-   
     autonHasStarted = false; 
     return;
   }
   
+  Brain.Timer.clear();
   autonHasStarted = true;
   TouchLED.setColor(green);
   autonTask = task(autonomousSequence);
 }
 
 int main() {
-  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-
   whenStarted1();
-
-  // register event handlers
   TouchLED.pressed(onevent_TouchLED_Pressed_0);
-
   while (true) {
     wait(20, msec);
   }
