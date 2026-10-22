@@ -134,14 +134,16 @@ int whenStarted1() {
 
 int autonomousSequence() 
 {
+  //BEANBAG 1
   Drivetrain.setTimeout(2,seconds);
-  Drivetrain.turnFor(left,12.7,degrees,true);
+  Drivetrain.turnFor(left,12.5,degrees,true);
   Drivetrain.driveFor(forward,95,mm,true);
   Drivetrain.setTimeout(0,seconds);
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
 
+//BEANBAG 2
   Drivetrain.driveFor(reverse,40,mm,true);
   Drivetrain.turnFor(right,12,degrees,true);
   Intake.spin(forward);
@@ -160,7 +162,7 @@ int autonomousSequence()
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
-
+//BEANBAG 3
   Drivetrain.driveFor(reverse,50,mm,true);
   Drivetrain.turnFor(right,17,degrees,true);
   Intake.spin(forward);
@@ -171,13 +173,13 @@ int autonomousSequence()
   Drivetrain.turnFor(left,17,degrees,true);
   wait(0.5,seconds);
   Intake.stop(coast);
-  Drivetrain.setTimeout(3,seconds);
+  Drivetrain.setTimeout(2.5,seconds);
   Drivetrain.driveFor(forward,85,mm,true);
   Drivetrain.setTimeout(0,seconds);
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
-
+//TIME REPORT FEATURE
   endAndReportTime();
   autonHasStarted = false;
   TouchLED.setColor(red);
