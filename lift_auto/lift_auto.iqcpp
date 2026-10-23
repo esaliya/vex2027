@@ -164,7 +164,7 @@ int autonomousSequence()
   Lift.spinToPosition(0,degrees, true);
 //BEANBAG 3
   Drivetrain.driveFor(reverse,50,mm,true);
-  Drivetrain.turnFor(right,17,degrees,true);
+  Drivetrain.turnFor(right,16,degrees,true);
   Intake.spin(forward);
   Drivetrain.setTimeout(4,seconds);
   Drivetrain.driveFor(forward,80,mm,true);
@@ -179,6 +179,7 @@ int autonomousSequence()
   Lift.spinToPosition(730,degrees,true);
   wait(0.5,seconds);
   Lift.spinToPosition(0,degrees, true);
+
 //TIME REPORT FEATURE
   endAndReportTime();
   autonHasStarted = false;
