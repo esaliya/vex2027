@@ -1,16 +1,21 @@
 #pragma region VEXcode Generated Robot Configuration
+// Make sure all required headers are included.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
 
+
 #include "vex.h"
 
 using namespace vex;
 
+// Brain should be defined by default
 brain Brain;
 
+
+// START IQ MACROS
 #define waitUntil(condition)                                                   \
   do {                                                                         \
     wait(5, msec);                                                             \
@@ -18,102 +23,249 @@ brain Brain;
 
 #define repeat(iterations)                                                     \
   for (int iterator = 0; iterator < iterations; iterator++)
+// END IQ MACROS
 
+
+// Robot configuration code.
 inertial BrainInertial = inertial();
-motor LeftDriveSmart = motor(PORT9, 1, true);
-motor RightDriveSmart = motor(PORT10, 1, false);
-drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 200, 173, 76, mm, 1);
-controller Controller = controller();
-motor RatchetMotorA = motor(PORT12, true);
-motor RatchetMotorB = motor(PORT7, false);
-motor_group Ratchet = motor_group(RatchetMotorA, RatchetMotorB);
-touchled TouchLED = touchled(PORT8);
-motor Lift = motor(PORT1, false);
-motor Intake = motor(PORT6, true);
-sonar Distance_Sensor = sonar(PORT2);
 
+
+// generating and setting random seed
 void initializeRandomSeed(){
   wait(100,msec);
   double xAxis = BrainInertial.acceleration(xaxis) * 1000;
   double yAxis = BrainInertial.acceleration(yaxis) * 1000;
   double zAxis = BrainInertial.acceleration(zaxis) * 1000;
-  int seed = int(xAxis + yAxis + zAxis);
+  // Combine these values into a single integer
+  int seed = int(
+    xAxis + yAxis + zAxis
+  );
+  // Set the seed
   srand(seed); 
 }
 
+
+
 void vexcodeInit() {
+
+  // Initializing random seed.
   initializeRandomSeed(); 
 }
 
-bool RemoteControlCodeEnabled = true;
-bool DrivetrainLNeedsToBeStopped_Controller = true;
-bool DrivetrainRNeedsToBeStopped_Controller = true;
-
-int rc_auto_loop_function_Controller() {
-  while(true) {
-    if(RemoteControlCodeEnabled) {
-      int drivetrainLeftSideSpeed = Controller.AxisA.position() + Controller.AxisC.position();
-      int drivetrainRightSideSpeed = Controller.AxisA.position() - Controller.AxisC.position();
-      
-      if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
-        if (DrivetrainLNeedsToBeStopped_Controller) {
-          LeftDriveSmart.stop();
-          DrivetrainLNeedsToBeStopped_Controller = false;
-        }
-      } else {
-        DrivetrainLNeedsToBeStopped_Controller = true;
-      }
-      if (drivetrainRightSideSpeed < 5 && drivetrainRightSideSpeed > -5) {
-        if (DrivetrainRNeedsToBeStopped_Controller) {
-          RightDriveSmart.stop();
-          DrivetrainRNeedsToBeStopped_Controller = false;
-        }
-      } else {
-        DrivetrainRNeedsToBeStopped_Controller = true;
-      }
-      
-      if (DrivetrainLNeedsToBeStopped_Controller) {
-        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
-        LeftDriveSmart.spin(forward);
-      }
-      if (DrivetrainRNeedsToBeStopped_Controller) {
-        RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
-        RightDriveSmart.spin(forward);
-      }
-    }
-    wait(20, msec);
-  }
-  return 0;
-}
-
-task rc_auto_loop_task_Controller(rc_auto_loop_function_Controller);
 #pragma endregion VEXcode Generated Robot Configuration
 
 #include "vex.h"
   
 using namespace vex;
 
-float myVariable;
-bool autonHasStarted = false;
+// LED colors: blue = calibrating, green = ready, orange = running,
+// red = finished or stopped (press again to continue).
+
+const int LIFT_SCORE_POS = 730;   // lift position for scoring (degrees)
+
+bool autonHasStarted = false;     // true while autonomous is running
+bool needsRecalibration = false;  // true after a stop; next press recalibrates
+bool recalibrating = false;       // true while the main loop recalibrates
+bool showHeading = true;          // live heading readout while waiting
+double splitTimes[3] = {0, 0, 0}; // time each beanbag was finished
+double targetHeading = 0;         // total intended turn since start (degrees, right = positive)
+
+// Set true if the sensor counts the opposite way (see the Rot readout).
+const bool HEADING_REVERSED = false;
+
+// Turn tuning: speed (%) = error * KP, limited to MIN..MAX.
+const double TURN_KP = 1.2;
+const double TURN_MIN_SPEED = 14;
+const double TURN_MAX_SPEED = 40;
+const double TURN_TOLERANCE = 1.5;     // degrees
+const double TURN_KICK_SPEED = 30;     // extra push at the start of a big turn
+const int TURN_KICK_MS = 120;          // how long the push lasts
+const double TURN_KICK_MIN_ERROR = 8;  // only kick if the turn is at least this big
+const int TURN_TIMEOUT_MS = 2500;
+
+// Glitch filter: a reading that jumps more than MAX_JUMP degrees in one 10 ms
+// step is treated as a sensor glitch and ignored. If the jump persists for
+// GLITCH_ACCEPT steps in a row, it is accepted as real.
+const double TURN_MAX_JUMP = 10;
+const int TURN_GLITCH_ACCEPT = 5;
+// A turn stops if the error grows this many degrees beyond where it started.
+const double TURN_RUNAWAY_LIMIT = 30;
+
+// When true, the time report shows details of the first turn of the run:
+// lowest and highest rotation reached, direction changes, and time taken.
+const bool TURN_DEBUG = true;
+int turnCount = 0;
+int glitchCount = 0;   // sensor readings ignored as impossible jumps (whole run)
+int bailCount = 0;     // turns stopped early for running away (whole run)
+double dbgMin = 0, dbgMax = 0;
+int dbgFlips = 0, dbgMs = 0;
 
 int autonomousSequence();
 task autonTask;
 
+// Lifts to the scoring position, then back down.
+void scoreBeanbag() {
+  Lift.spinToPosition(LIFT_SCORE_POS, degrees, true);
+  wait(0.5, seconds);
+  Lift.spinToPosition(0, degrees, true);
+}
+
+// Sets the sensor's rotation to 0 and waits until it reports it.
+// Rotation is continuous (no 0/360 wrap-around).
+void zeroHeading() {
+  BrainInertial.setRotation(0, degrees);
+  wait(100, msec);
+  int tries = 0;
+  while (tries < 40 && fabs(BrainInertial.rotation(degrees)) > 1.0) {
+    wait(25, msec);
+    tries++;
+  }
+}
+
+// Turns until the sensor's rotation matches targetHeading, slowing as it
+// gets close. Ignores impossible sensor jumps, stops if the turn runs away,
+// and gives up at the timeout.
+void turnToTarget() {
+  double sign = HEADING_REVERSED ? -1.0 : 1.0;
+  bool logThis = (turnCount == 0);
+  turnCount++;
+  timer t;
+  t.clear();
+  int settled = 0;
+  int lastDir = 0;
+  int badCount = 0;
+  double lastGood = sign * BrainInertial.rotation(degrees);
+  double startError = fabs(targetHeading - lastGood);
+  if (logThis) {
+    dbgMin = dbgMax = lastGood;
+    dbgFlips = 0;
+  }
+  while (t.time(msec) < TURN_TIMEOUT_MS && settled < 5) {
+    double raw = sign * BrainInertial.rotation(degrees);
+    double rot;
+    if (fabs(raw - lastGood) > TURN_MAX_JUMP && badCount < TURN_GLITCH_ACCEPT) {
+      badCount++;
+      glitchCount++;
+      rot = lastGood;
+    } else {
+      badCount = 0;
+      rot = raw;
+      lastGood = raw;
+    }
+    double error = targetHeading - rot;
+    if (logThis) {
+      if (rot < dbgMin) dbgMin = rot;
+      if (rot > dbgMax) dbgMax = rot;
+    }
+    if (fabs(error) > startError + TURN_RUNAWAY_LIMIT) {
+      bailCount++;
+      break;
+    }
+    if (fabs(error) <= TURN_TOLERANCE) {
+      Drivetrain.stop();
+      settled++;
+    } else {
+      settled = 0;
+      int dir = (error > 0) ? 1 : -1;
+      if (logThis && lastDir != 0 && dir != lastDir) dbgFlips++;
+      lastDir = dir;
+      double speed = fabs(error) * TURN_KP;
+      if (speed < TURN_MIN_SPEED) speed = TURN_MIN_SPEED;
+      if (speed > TURN_MAX_SPEED) speed = TURN_MAX_SPEED;
+      if (t.time(msec) < TURN_KICK_MS && fabs(error) > TURN_KICK_MIN_ERROR && speed < TURN_KICK_SPEED) {
+        speed = TURN_KICK_SPEED;
+      }
+      Drivetrain.setTurnVelocity(speed, percent);
+      if (dir > 0) {
+        Drivetrain.turn(right);
+      } else {
+        Drivetrain.turn(left);
+      }
+    }
+    wait(10, msec);
+  }
+  Drivetrain.stop();
+  if (logThis) dbgMs = (int)t.time(msec);
+}
+
+// Makes the robot's current real heading the new reference. Call it after the
+// robot rams a post and slides, so the next turn is measured from where the
+// robot actually ended up instead of snapping back to the planned heading.
+void rebaseline() {
+  double sign = HEADING_REVERSED ? -1.0 : 1.0;
+  targetHeading = sign * BrainInertial.rotation(degrees);
+}
+
+// Turn by an angle relative to the current direction.
+void turnLeft(double deg) {
+  targetHeading -= deg;
+  turnToTarget();
+}
+
+void turnRight(double deg) {
+  targetHeading += deg;
+  turnToTarget();
+}
+
+void printSplit(int row, const char* label, double t) {
+  Brain.Screen.setCursor(row, 1);
+  if (t > 0) {
+    Brain.Screen.print("%s %.2f s", label, t);
+  } else {
+    Brain.Screen.print("%s --", label);
+  }
+}
+
+// Stops everything, gives control back to the joysticks, shows the time report.
 void endAndReportTime() {
   double finalTime = Brain.Timer.time(seconds);
   Drivetrain.stop(coast);
   Lift.stop(coast);
   Intake.stop(coast);
   Ratchet.stop(coast);
+  RemoteControlCodeEnabled = true;
+
   Brain.Screen.clearScreen();
   Brain.Screen.setCursor(1, 1);
-  Brain.Screen.print("Elapsed Time:");
-  Brain.Screen.setCursor(2, 1);
-  Brain.Screen.print("%.2f sec", finalTime);
+  Brain.Screen.print("Total: %.2f s", finalTime);
+  printSplit(2, "BB1:", splitTimes[0]);
+  printSplit(3, "BB2:", splitTimes[1]);
+  printSplit(4, "BB3:", splitTimes[2]);
+  if (TURN_DEBUG) {
+    Brain.Screen.setCursor(5, 1);
+    Brain.Screen.print("T1:%.0f/%.0f %d", dbgMin, dbgMax, dbgMs);
+    Brain.Screen.setCursor(6, 1);
+    Brain.Screen.print("f%d g%d b%d", dbgFlips, glitchCount, bailCount);
+  }
 }
 
+// Shows the ready screen with the battery level.
+void showReadyScreen() {
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("Batt: %d%%", (int)Brain.Battery.capacity(percent));
+}
+
+// Recalibrates after a stop: blue while calibrating, green when ready.
+void recalibrate() {
+  TouchLED.setColor(blue);
+  wait(200, msec);
+  BrainInertial.calibrate();
+  while (BrainInertial.isCalibrating()) {
+    wait(25, msec);
+  }
+  zeroHeading();
+  showReadyScreen();
+  showHeading = true;
+  TouchLED.setColor(green);
+  recalibrating = false;
+}
+
+// Startup settings.
 int whenStarted1() {
-  Drivetrain.setStopping(coast);
+  LeftDriveSmart.setMaxTorque(100, percent);
+  RightDriveSmart.setMaxTorque(100, percent);
+  Drivetrain.setStopping(brake);
   Lift.setStopping(coast);
   Intake.setStopping(coast);
   Ratchet.setStopping(coast);
@@ -128,78 +280,105 @@ int whenStarted1() {
   Intake.setVelocity(100.0, percent);
   Intake.setMaxTorque(100.0, percent);
   Ratchet.spinToPosition(0.0, degrees, false);
-  TouchLED.setColor(red);
+
+  zeroHeading();
+  TouchLED.setColor(green);
+  showReadyScreen();
   return 0;
 }
 
+// Autonomous routine: three beanbags, then the time report.
 int autonomousSequence() 
 {
-  //BEANBAG 1
+  // BEANBAG 1
   Drivetrain.setTimeout(2,seconds);
-  Drivetrain.turnFor(left,12.5,degrees,true);
+  turnLeft(15.25);
   Drivetrain.driveFor(forward,95,mm,true);
   Drivetrain.setTimeout(0,seconds);
-  Lift.spinToPosition(730,degrees,true);
-  wait(0.5,seconds);
-  Lift.spinToPosition(0,degrees, true);
+  scoreBeanbag();
+  splitTimes[0] = Brain.Timer.time(seconds);
 
-//BEANBAG 2
+  // BEANBAG 2
   Drivetrain.driveFor(reverse,40,mm,true);
-  Drivetrain.turnFor(right,12,degrees,true);
+  rebaseline();   // robot slid on the post
+  turnRight(15.5);
   Intake.spin(forward);
   Drivetrain.setTimeout(2,seconds);
   Drivetrain.driveFor(forward,50,mm,true);
   Drivetrain.setTimeout(0,seconds);
   Drivetrain.driveFor(reverse,75,mm,true);
-  Drivetrain.turnFor(left, 12,degrees,true);
+  turnLeft(3);
   wait(1.25,seconds);
   Intake.stop(coast);
   Drivetrain.setTimeout(2,seconds);
   Drivetrain.setDriveVelocity(15,percent);
   Drivetrain.driveFor(forward,90,mm,true);
   Drivetrain.setDriveVelocity(20,percent);
-  Drivetrain.setTimeout (0,seconds);
-  Lift.spinToPosition(730,degrees,true);
-  wait(0.5,seconds);
-  Lift.spinToPosition(0,degrees, true);
-//BEANBAG 3
+  Drivetrain.setTimeout(0,seconds);
+  scoreBeanbag();
+  splitTimes[1] = Brain.Timer.time(seconds);
+
+  // BEANBAG 3
   Drivetrain.driveFor(reverse,50,mm,true);
-  Drivetrain.turnFor(right,16,degrees,true);
+  rebaseline();   // robot slid on the post
+  turnRight(16);
   Intake.spin(forward);
   Drivetrain.setTimeout(4,seconds);
   Drivetrain.driveFor(forward,80,mm,true);
   Drivetrain.driveFor(reverse,80,mm,true);
   Drivetrain.setTimeout(0,seconds);
-  Drivetrain.turnFor(left,17,degrees,true);
+  turnLeft(17);
   wait(0.5,seconds);
   Intake.stop(coast);
   Drivetrain.setTimeout(2.5,seconds);
   Drivetrain.driveFor(forward,85,mm,true);
   Drivetrain.setTimeout(0,seconds);
-  Lift.spinToPosition(730,degrees,true);
-  wait(0.5,seconds);
-  Lift.spinToPosition(0,degrees, true);
+  scoreBeanbag();
+  splitTimes[2] = Brain.Timer.time(seconds);
 
-//TIME REPORT FEATURE
   endAndReportTime();
   autonHasStarted = false;
   TouchLED.setColor(red);
   return 0;
 }
 
+// TouchLED press:
+//  - while recalibrating: ignored
+//  - while running: stops the run, LED red
+//  - after a stop: starts recalibration (blue, then green)
+//  - otherwise: zeroes the heading and starts the run (orange)
 void onevent_TouchLED_Pressed_0() 
 {
+  if (recalibrating) {
+    return;
+  }
+
   if (autonHasStarted) {
     autonTask.stop();
     endAndReportTime();
     TouchLED.setColor(red);
     autonHasStarted = false; 
+    needsRecalibration = true;
+    return;
+  }
+
+  if (needsRecalibration) {
+    needsRecalibration = false;
+    recalibrating = true;
     return;
   }
   
+  RemoteControlCodeEnabled = false;
+  splitTimes[0] = splitTimes[1] = splitTimes[2] = 0;
+  zeroHeading();
+  targetHeading = 0;
+  turnCount = 0;
+  glitchCount = 0;
+  bailCount = 0;
   Brain.Timer.clear();
+  showHeading = false;
   autonHasStarted = true;
-  TouchLED.setColor(green);
+  TouchLED.setColor(orange);
   autonTask = task(autonomousSequence);
 }
 
@@ -208,6 +387,13 @@ int main() {
   whenStarted1();
   TouchLED.pressed(onevent_TouchLED_Pressed_0);
   while (true) {
-    wait(20, msec);
+    if (recalibrating) {
+      recalibrate();
+    }
+    if (showHeading) {
+      Brain.Screen.setCursor(2, 1);
+      Brain.Screen.print("Rot: %.1f   ", BrainInertial.rotation(degrees));
+    }
+    wait(100, msec);
   }
 }
