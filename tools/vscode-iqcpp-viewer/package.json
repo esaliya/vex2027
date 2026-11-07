@@ -1,0 +1,66 @@
+{
+  "name": "iqcpp-viewer",
+  "displayName": "VEXcode .iqcpp Code Editor",
+  "description": "Shows and edits the C++ code inside VEXcode IQ .iqcpp project files, and shows their diffs as C++.",
+  "version": "0.3.1",
+  "publisher": "vex2027",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "iqcppViewer.showCode",
+        "title": "Show C++ Code",
+        "category": "IQ",
+        "icon": "$(code)"
+      },
+      {
+        "command": "iqcppViewer.showRaw",
+        "title": "Show Raw .iqcpp JSON",
+        "category": "IQ",
+        "icon": "$(json)"
+      },
+      {
+        "command": "iqcppViewer.showChanges",
+        "title": "Show Changes (C++)",
+        "category": "IQ",
+        "icon": "$(git-compare)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "iqcppViewer.showCode",
+          "when": "resourceScheme == file && resourceExtname == .iqcpp",
+          "group": "navigation"
+        },
+        {
+          "command": "iqcppViewer.showRaw",
+          "when": "resourceScheme == iqcpp-code || resourceScheme == iqcpp-version",
+          "group": "navigation"
+        },
+        {
+          "command": "iqcppViewer.showChanges",
+          "when": "resourceScheme == iqcpp-code && !isInDiffEditor",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "VEXcode .iqcpp Code Viewer",
+      "properties": {
+        "iqcppViewer.openAsCode": {
+          "type": "boolean",
+          "default": true,
+          "description": "When a .iqcpp file is opened, show its C++ code (editable) instead of the raw one-line JSON."
+        }
+      }
+    }
+  }
+}
