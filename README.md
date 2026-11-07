@@ -6,12 +6,15 @@ VEX IQ (2nd gen) robot code, written in VEXcode IQ.
 
 | File | What it is | Brain slot |
 | --- | --- | --- |
-| `lift_auto/lift_auto.iqcpp` | Lift robot autonomous (C++) | 7 |
-| `lift_auto/lift_auto_comp.iqcpp` | Lift robot autonomous, competition copy (C++) | 7 |
-| `lift_drive/current_lift.iqcpp` | Lift robot driver control (C++) | 1 |
-| `lift_drive/original_lift.iqblocks` | Original lift driver control (Blocks) | 1 |
-| `pneu_drive/current_pneu.iqblocks` | Pneumatic robot driver control (Blocks) | 0 |
-| `pneu_drive/original_penumatric.iqblocks` | Original pneumatic driver control (Blocks) | 0 |
+| `lift_auto/lift_auto.iqcpp` | Lift robot autonomous (C++) | 2 |
+| `lift_auto/lift_auto_comp.iqcpp` | Lift robot autonomous, competition copy (C++) | 8 |
+| `lift_drive/current_lift.iqcpp` | Lift robot driver control (C++) | 2 |
+| `lift_drive/original_lift.iqblocks` | Original lift driver control (Blocks) | 2 |
+| `pneu_drive/current_pneu.iqblocks` | Pneumatic robot driver control (Blocks) | 1 |
+| `pneu_drive/original_penumatric.iqblocks` | Original pneumatic driver control (Blocks) | 1 |
+
+Slots are numbered as VEXcode shows them (1 to 8). The project file stores one
+less: its `"slot"` field is 0 for slot 1 and 7 for slot 8.
 
 Projects that share a slot overwrite each other on the brain. Check the slot in
 VEXcode before downloading.
@@ -90,10 +93,13 @@ The TouchLED shows what the robot is doing, and a press does the next step:
 | Blue | Calibrating the inertial sensor (about 2 s); keep the robot still | Ignored |
 | Green | Ready | Starts the run |
 | Orange | Running | Stops the run |
-| Red | Finished or stopped; the screen shows the time report | Recalibrates (blue, then green) |
+| Red | Run finished; the screen shows the time report | Starts the next run |
+| Red | Run stopped with the TouchLED; the screen shows the time report | Recalibrates (blue, then green) |
 
-- The program calibrates when it starts, so wait for green before the first run.
-- Presses within 0.5 s of an LED change are ignored, so a double tap can't
-  start or stop a run by accident.
+- The program calibrates the sensor when it starts (blue for about 2 s), so
+  wait for green before the first run, and don't touch the robot meanwhile.
+- Presses within 0.5 s of an LED change are ignored when starting a run or
+  recalibrating, so a double tap can't start a run by accident. A press while
+  the robot is running always stops it at once.
 - The joystick drives the robot when the LED is green or red, but not while it
   is blue or orange.
